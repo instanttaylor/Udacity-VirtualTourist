@@ -13,6 +13,7 @@
 		34FC691E1BFF98C8000E4FBC /* Virtual_Tourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34FC691C1BFF98C8000E4FBC /* Virtual_Tourist.xcdatamodeld */; };
 		34FC69201BFF98C8000E4FBC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34FC691F1BFF98C8000E4FBC /* Assets.xcassets */; };
 		34FC69231BFF98C8000E4FBC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34FC69211BFF98C8000E4FBC /* LaunchScreen.storyboard */; };
+		34FC692B1BFF9906000E4FBC /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FC692A1BFF9906000E4FBC /* CoreDataStackManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		34FC691F1BFF98C8000E4FBC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		34FC69221BFF98C8000E4FBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		34FC69241BFF98C8000E4FBC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		34FC692A1BFF9906000E4FBC /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				34FC69151BFF98C8000E4FBC /* AppDelegate.swift */,
+				34FC692A1BFF9906000E4FBC /* CoreDataStackManager.swift */,
 				34FC69171BFF98C8000E4FBC /* ViewController.swift */,
 				34FC69191BFF98C8000E4FBC /* Main.storyboard */,
 				34FC691F1BFF98C8000E4FBC /* Assets.xcassets */,
@@ -139,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34FC69181BFF98C8000E4FBC /* ViewController.swift in Sources */,
+				34FC692B1BFF9906000E4FBC /* CoreDataStackManager.swift in Sources */,
 				34FC691E1BFF98C8000E4FBC /* Virtual_Tourist.xcdatamodeld in Sources */,
 				34FC69161BFF98C8000E4FBC /* AppDelegate.swift in Sources */,
 			);
