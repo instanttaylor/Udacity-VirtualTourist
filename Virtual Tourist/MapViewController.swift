@@ -84,6 +84,19 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         storeCurrentMapCoords()
     }
     
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        
+        print(view.annotation?.coordinate.latitude)
+        print(view.annotation?.coordinate.longitude)
+        guard let photosVC = storyboard?.instantiateViewControllerWithIdentifier("PictureView") as? PhotosViewController else {return}
+
+        photosVC.coordinates = view.annotation?.coordinate
+        
+        self.navigationController?.pushViewController(photosVC, animated: true)
+        
+        
+    }
+    
 //    CORE DATA
     
     var sharedContext: NSManagedObjectContext {
