@@ -18,6 +18,7 @@
 		34FC69201BFF98C8000E4FBC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34FC691F1BFF98C8000E4FBC /* Assets.xcassets */; };
 		34FC69231BFF98C8000E4FBC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34FC69211BFF98C8000E4FBC /* LaunchScreen.storyboard */; };
 		34FC692B1BFF9906000E4FBC /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FC692A1BFF9906000E4FBC /* CoreDataStackManager.swift */; };
+		34FCD7C11C0CBE9A00F9A6BE /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FCD7C01C0CBE9A00F9A6BE /* Config.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		34FC69221BFF98C8000E4FBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		34FC69241BFF98C8000E4FBC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34FC692A1BFF9906000E4FBC /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
+		34FCD7C01C0CBE9A00F9A6BE /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				34FC691F1BFF98C8000E4FBC /* Assets.xcassets */,
 				34FC69211BFF98C8000E4FBC /* LaunchScreen.storyboard */,
 				34FC69241BFF98C8000E4FBC /* Info.plist */,
+				34FCD7C01C0CBE9A00F9A6BE /* Config.swift */,
 			);
 			path = "Virtual Tourist";
 			sourceTree = "<group>";
@@ -179,6 +182,7 @@
 			files = (
 				342320D51C036C3D00DA589E /* Photo.swift in Sources */,
 				342320D31C036BF000DA589E /* Pin.swift in Sources */,
+				34FCD7C11C0CBE9A00F9A6BE /* Config.swift in Sources */,
 				346C4D311C0623CE00C8C336 /* CollectionViewCell.swift in Sources */,
 				34FC692B1BFF9906000E4FBC /* CoreDataStackManager.swift in Sources */,
 				34FC691E1BFF98C8000E4FBC /* Virtual_Tourist.xcdatamodeld in Sources */,
