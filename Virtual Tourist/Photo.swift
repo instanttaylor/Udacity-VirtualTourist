@@ -11,16 +11,20 @@ import CoreData
 
 class Photo: NSManagedObject {
     
-    @NSManaged var id: Int64
-    @NSManaged var owner: Int64
+    @NSManaged var id: String
+    @NSManaged var owner: String
     @NSManaged var title: String
-    @NSManaged var pin: Pin?
+    @NSManaged var pin: Pin
+    @NSManaged var thing: String?
+    @NSManaged var farm: Int
+    @NSManaged var secret: String
+    @NSManaged var server: String
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
     
-    init(id: Int64, owner: Int64, title: String, pin: Pin, context: NSManagedObjectContext) {
+    init(id: String, owner: String, title: String, pin: Pin, farm: Int, secret: String, server: String, context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName("Photo", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
@@ -28,6 +32,10 @@ class Photo: NSManagedObject {
         self.owner = owner
         self.title = title
         self.pin = pin
+        self.farm = farm
+        self.secret = secret
+        self.server = server
+        self.thing = "Testing out data migration"
         
     }
 }

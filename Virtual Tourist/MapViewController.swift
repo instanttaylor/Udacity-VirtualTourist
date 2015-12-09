@@ -13,6 +13,7 @@ import CoreData
 class MapViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
+    var pins = [Pin]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,12 +23,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     override func viewWillAppear(animated: Bool) {
         retrievePreviousMapCoords()
+        pins = fetchAllPins()
         setAllSavedPins()
     }
     
     func addLongPress() {
         let lp = UILongPressGestureRecognizer(target: self, action: "addPin:")
-        lp.minimumPressDuration = 2.0
+        lp.minimumPressDuration = 1.5
         mapView.addGestureRecognizer(lp)
     }
     
@@ -38,20 +40,25 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             let annotation = MKPointAnnotation()
             annotation.coordinate = coords
             mapView.addAnnotation(annotation)
-            let _ = Pin(lat: annotation.coordinate.latitude, long: annotation.coordinate.longitude, context: sharedContext)
+            let pin = Pin(lat: annotation.coordinate.latitude, long: annotation.coordinate.longitude, context: sharedContext)
             CoreDataStackManager.sharedInstance().saveContext()
+            PhotoDownloader(pin: pin).getPhotos()
         }
     }
     
     func setAllSavedPins() {
-        let pins = fetchAllPins()
-        pins.forEach {
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)
+        for (index, pin) in pins.enumerate() {
+            let annotation = PinAnnotation(pinID: index)
+            annotation.coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
             mapView.addAnnotation(annotation)
         }
+
     }
 
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        storeCurrentMapCoords()
+    }
+    
     func storeCurrentMapCoords() {
         
         let dictionary = [
@@ -79,18 +86,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         mapView.setRegion(region, animated: false)
         
     }
-
-    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        storeCurrentMapCoords()
-    }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         
-        print(view.annotation?.coordinate.latitude)
-        print(view.annotation?.coordinate.longitude)
+        guard let pin = view.annotation as? PinAnnotation else {return}
         guard let photosVC = storyboard?.instantiateViewControllerWithIdentifier("PictureView") as? PhotosViewController else {return}
 
-        photosVC.coordinates = view.annotation?.coordinate
+        photosVC.coordinates = pin.coordinate
+        photosVC.pin = pins[pin.pinID]
         
         self.navigationController?.pushViewController(photosVC, animated: true)
         

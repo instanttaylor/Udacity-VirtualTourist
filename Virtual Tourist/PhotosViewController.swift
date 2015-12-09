@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 class PhotosViewController: UIViewController, MKMapViewDelegate {
 
@@ -17,12 +18,20 @@ class PhotosViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var button: UIButton!
     
     var coordinates: CLLocationCoordinate2D?
+    var pin: Pin?
+    var photos = [Photo]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
-        getPhotos()
         loadMapView()
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        photos = fetchAllPhotos()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        collectionView.reloadData()
     }
     
     func loadMapView() {
@@ -37,10 +46,39 @@ class PhotosViewController: UIViewController, MKMapViewDelegate {
         
     }
     
-    func getPhotos() {
-        print("getting photos for \(coordinates)")
+    @IBAction func newCollectionTapped(sender: AnyObject) {
     }
     
-    @IBAction func newCollectionTapped(sender: AnyObject) {
+//    CORE DATA
+    
+    var sharedContext: NSManagedObjectContext {
+        return CoreDataStackManager.sharedInstance().managedObjectContext
+    }
+            
+    func fetchAllPhotos() -> [Photo] {
+        guard let pin = pin else { return [Photo]() }
+        let fetchRequest = NSFetchRequest(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate(format: "pin == %@", pin)
+        
+        do {
+            return try sharedContext.executeFetchRequest(fetchRequest) as! [Photo]
+        } catch let error as NSError {
+            print("Error in fetchAllEvents(): \(error)")
+            return [Photo]()
+        }
+    }
+    
+    
+}
+
+extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return photos.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCell", forIndexPath: indexPath) as! CollectionViewCell
+        cell.photo = photos[indexPath.item]
+        return cell
     }
 }
