@@ -92,6 +92,10 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="95" height="95"/>
                                                     <animations/>
                                                 </imageView>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Xac-Ql-tAb">
+                                                    <rect key="frame" x="37" y="38" width="20" height="20"/>
+                                                    <animations/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <animations/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -99,12 +103,15 @@
                                         <animations/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
+                                            <constraint firstItem="Xac-Ql-tAb" firstAttribute="centerX" secondItem="ZJq-zU-NUZ" secondAttribute="centerX" id="Wy0-4U-fNw"/>
                                             <constraint firstItem="ZY1-J1-NwC" firstAttribute="top" secondItem="ZJq-zU-NUZ" secondAttribute="topMargin" constant="-8" id="hjp-rz-zoA"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="ZY1-J1-NwC" secondAttribute="trailing" constant="-8" id="kJe-d2-p0L"/>
                                             <constraint firstItem="ZY1-J1-NwC" firstAttribute="leading" secondItem="ZJq-zU-NUZ" secondAttribute="leadingMargin" constant="-8" id="l5q-6A-4wm"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="ZY1-J1-NwC" secondAttribute="bottom" constant="-8" id="vMb-OR-C4l"/>
+                                            <constraint firstItem="Xac-Ql-tAb" firstAttribute="centerY" secondItem="ZJq-zU-NUZ" secondAttribute="centerY" id="zan-X5-Li5"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="activityIndicator" destination="Xac-Ql-tAb" id="eQR-eM-BQC"/>
                                             <outlet property="imageView" destination="ZY1-J1-NwC" id="hrV-Qz-IEx"/>
                                         </connections>
                                     </collectionViewCell>

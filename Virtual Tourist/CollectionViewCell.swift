@@ -16,17 +16,22 @@ class CollectionViewCell: UICollectionViewCell {
         }
     }
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageView: UIImageView!
     
     func updateUI() {
-        guard let photo = photo else {return}
-        let string = "https://farm\(photo.farm).staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg"
-        guard let url = NSURL(string: string) else {return}
-        guard let data = NSData(contentsOfURL: url) else {return}
+        guard let photoToDownload = photo else {return}
         
-        dispatch_async(dispatch_get_main_queue()) {
-            self.imageView.image = UIImage(data: data)
+        let qos = QOS_CLASS_BACKGROUND
+        let backgroundQueue = dispatch_get_global_queue(qos, 0)
+        
+        dispatch_async(backgroundQueue) {
+            guard let data = PhotoDownloader().downloadImageForPhoto(photoToDownload) else {return}
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                self.activityIndicator.stopAnimating()
+                self.imageView.image = UIImage(data: data)
+            }
         }
     }
-    
 }

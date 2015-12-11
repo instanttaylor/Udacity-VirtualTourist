@@ -9,15 +9,10 @@
 import Foundation
 import CoreData
 
-class PhotoDownloader {
+struct PhotoDownloader {
     
-    var pin: Pin!
-    
-    init(pin: Pin) {
-        self.pin = pin
-    }
-    
-    func getPhotos() {
+    func getPhotos(pin: Pin) {
+        print("getting photos for pin: \(pin)")
         
         Flickr().getPhotosFromLocation(pin.latitude, long: pin.longitude) { results, error in
             if error != nil {
@@ -26,7 +21,6 @@ class PhotoDownloader {
             }
             guard let all = results["photos"] as? NSDictionary else {return}
             guard let photos = all["photo"] as? NSArray else {return}
-
             photos.forEach {
                 print($0)
                 guard let id = $0["id"] as? String else {
@@ -44,12 +38,21 @@ class PhotoDownloader {
                     print("no farm")
                     return}
                 
-                let photo = Photo(id: id, owner: owner, title: title, pin: self.pin, farm: farm, secret: secret, server: server, context: self.sharedContext)
+                let photo = Photo(id: id, owner: owner, title: title, pin: pin, farm: farm, secret: secret, server: server, context: self.sharedContext)
                 print(photo)
                 
                 CoreDataStackManager.sharedInstance().saveContext()
             }
+//            NSNotificationCenter.defaultCenter().postNotificationName("doneGettingPhotos", object: nil)
         }
+    }
+    
+    func downloadImageForPhoto(photo: Photo) -> NSData? {
+        let string = "https://farm\(photo.farm).staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg"
+        guard let url = NSURL(string: string) else {return nil}
+        
+        guard let data = NSData(contentsOfURL: url) else {return nil}
+        return data
     }
     
     var sharedContext: NSManagedObjectContext {

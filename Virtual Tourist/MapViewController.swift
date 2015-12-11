@@ -42,7 +42,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             mapView.addAnnotation(annotation)
             let pin = Pin(lat: annotation.coordinate.latitude, long: annotation.coordinate.longitude, context: sharedContext)
             CoreDataStackManager.sharedInstance().saveContext()
-            PhotoDownloader(pin: pin).getPhotos()
+            PhotoDownloader().getPhotos(pin)
         }
     }
     

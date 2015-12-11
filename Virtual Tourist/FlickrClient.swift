@@ -84,7 +84,7 @@ class Flickr: NSObject {
         do {
             parsed = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
             print("parsed photos in do block")
-        } catch let error as NSError {
+        } catch {
             parsed = nil
             print("I'm in parse error")
             return

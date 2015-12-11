@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreData
 
-class PhotosViewController: UIViewController, MKMapViewDelegate {
+class PhotosViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsControllerDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -19,7 +19,7 @@ class PhotosViewController: UIViewController, MKMapViewDelegate {
     
     var coordinates: CLLocationCoordinate2D?
     var pin: Pin?
-    var photos = [Photo]()
+//    var photos = [Photo]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,11 +27,20 @@ class PhotosViewController: UIViewController, MKMapViewDelegate {
         loadMapView()
         collectionView.delegate = self
         collectionView.dataSource = self
-        photos = fetchAllPhotos()
+//        photos = fetchAllPhotos()
+        fetchedResultsController.delegate = self
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {}
+        
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reloadCollectionView", name: "doneGettingPhotos", object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
-        collectionView.reloadData()
+//        if photos.count == 0 {
+//            generateNewCollection()
+//        }
     }
     
     func loadMapView() {
@@ -47,25 +56,78 @@ class PhotosViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func newCollectionTapped(sender: AnyObject) {
+        generateNewCollection()
     }
+    
+    func generateNewCollection() {
+        let photos = fetchedResultsController.fetchedObjects as! [Photo]
+        
+        
+        for p in photos {
+            sharedContext.deleteObject(p)
+        }
+        
+        print("photos from generate")
+        print(photos)
+//        guard let pinToDownload = self.pin else { return }
+//        PhotoDownloader().getPhotos(pinToDownload)
+    }
+
     
 //    CORE DATA
     
     var sharedContext: NSManagedObjectContext {
         return CoreDataStackManager.sharedInstance().managedObjectContext
     }
-            
-    func fetchAllPhotos() -> [Photo] {
-        guard let pin = pin else { return [Photo]() }
+    
+    lazy var fetchedResultsController: NSFetchedResultsController = {
+        let fetchRequest = NSFetchRequest(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate(format: "pin == %@", self.pin!)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
+        return fetchedResultsController
+    }()
+    
+//    FETCHED RESULTS CONTROLLER DELEGATE METHODS
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+//        don't need this one for collection view
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+//        no section data for this collection view
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        switch type {
+        case .Delete:
+            collectionView.deleteItemsAtIndexPaths([indexPath!])
+        case .Insert:
+            collectionView.insertItemsAtIndexPaths([newIndexPath!])
+        default:
+            return
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        self.collectionView.reloadData()
+    }
+    
+    func deleteAllPhotos() {
+        guard let pin = pin else { return }
         let fetchRequest = NSFetchRequest(entityName: "Photo")
         fetchRequest.predicate = NSPredicate(format: "pin == %@", pin)
         
         do {
-            return try sharedContext.executeFetchRequest(fetchRequest) as! [Photo]
+            let photosForPin = try sharedContext.executeFetchRequest(fetchRequest) as! [Photo]
+            for entity in photosForPin {
+                self.sharedContext.deleteObject(entity)
+            }
         } catch let error as NSError {
-            print("Error in fetchAllEvents(): \(error)")
-            return [Photo]()
+            print("Error in fetchAllPhotos(): \(error)")
+            return
         }
+        CoreDataStackManager.sharedInstance().saveContext()
     }
     
     
@@ -73,12 +135,22 @@ class PhotosViewController: UIViewController, MKMapViewDelegate {
 
 extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photos.count
+        let sectionInfo = self.fetchedResultsController.sections![section]
+        return sectionInfo.numberOfObjects
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCell", forIndexPath: indexPath) as! CollectionViewCell
-        cell.photo = photos[indexPath.item]
+        cell.photo = photo
         return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
+        sharedContext.deleteObject(photo)
+        CoreDataStackManager.sharedInstance().saveContext()
+        
     }
 }
