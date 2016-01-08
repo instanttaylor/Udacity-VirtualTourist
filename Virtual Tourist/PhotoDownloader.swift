@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 struct PhotoDownloader {
     
@@ -43,16 +44,17 @@ struct PhotoDownloader {
                 
                 CoreDataStackManager.sharedInstance().saveContext()
             }
-//            NSNotificationCenter.defaultCenter().postNotificationName("doneGettingPhotos", object: nil)
         }
     }
     
-    func downloadImageForPhoto(photo: Photo) -> NSData? {
+    func downloadImageForPhoto(photo: Photo) -> UIImage? {
         let string = "https://farm\(photo.farm).staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg"
-        guard let url = NSURL(string: string) else {return nil}
         
+        guard let url = NSURL(string: string) else {return nil}
         guard let data = NSData(contentsOfURL: url) else {return nil}
-        return data
+        guard let image = UIImage(data: data) else {return nil}
+        
+        return image
     }
     
     var sharedContext: NSManagedObjectContext {

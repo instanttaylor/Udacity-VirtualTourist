@@ -25,4 +25,24 @@ class Pin: NSManagedObject {
         self.longitude = long
         
     }
+    
+    func deletePhotos() {
+        let fetchRequest = NSFetchRequest(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate(format: "pin == %@", self)
+        
+        
+        do {
+            let photos = try sharedContext.executeFetchRequest(fetchRequest) as! [Photo]
+            for p in photos {
+                sharedContext.deleteObject(p)
+            }
+        } catch {
+            print("error in fetch")
+        }
+        
+    }
+    
+    var sharedContext: NSManagedObjectContext {
+        return CoreDataStackManager.sharedInstance().managedObjectContext
+    }
 }

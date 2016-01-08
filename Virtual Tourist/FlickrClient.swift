@@ -94,4 +94,8 @@ class Flickr: NSObject {
         
     }
     
+    struct Caches {
+        static let imageCache = ImageCache()
+    }
+    
 }

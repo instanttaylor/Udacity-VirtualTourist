@@ -44,6 +44,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             CoreDataStackManager.sharedInstance().saveContext()
             PhotoDownloader().getPhotos(pin)
         }
+        
     }
     
     func setAllSavedPins() {

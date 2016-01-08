@@ -20,18 +20,36 @@ class CollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     
     func updateUI() {
-        guard let photoToDownload = photo else {return}
+        var photoImage = UIImage(named: "")
         
-        let qos = QOS_CLASS_BACKGROUND
-        let backgroundQueue = dispatch_get_global_queue(qos, 0)
-        
-        dispatch_async(backgroundQueue) {
-            guard let data = PhotoDownloader().downloadImageForPhoto(photoToDownload) else {return}
+        if photo?.photoPath == nil || photo?.photoPath == "" {
+            print("photopath is bad: \(photo?.photoPath)")
+            photoImage = UIImage(named: "noImage")
+        } else if photo?.photoImage != nil {
+            print("photo path isn't nil so setting it: \(photo?.photoImage)")
+            photoImage = photo?.photoImage
+        } else {
+            print("i'm downloading a photo")
+//            this returns a photo when it's downloaded
             
-            dispatch_async(dispatch_get_main_queue()) {
-                self.activityIndicator.stopAnimating()
-                self.imageView.image = UIImage(data: data)
+            let qos = QOS_CLASS_BACKGROUND
+            let backgroundQueue = dispatch_get_global_queue(qos, 0)
+            
+            dispatch_async(backgroundQueue) {
+                let newPhoto = PhotoDownloader().downloadImageForPhoto(self.photo!)
+                //            this uses the set method to store the image in a cache
+                print("here's the new photo: \(newPhoto)")
+                self.photo?.photoImage = newPhoto
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.activityIndicator.stopAnimating()
+                    self.imageView.image = newPhoto
+                    print("adding image in background queue")
+                }
             }
+            
         }
+        activityIndicator.stopAnimating()
+        imageView.image = photoImage
     }
 }

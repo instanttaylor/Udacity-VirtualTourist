@@ -19,7 +19,6 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, NSFetchedResult
     
     var coordinates: CLLocationCoordinate2D?
     var pin: Pin?
-//    var photos = [Photo]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,20 +26,17 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, NSFetchedResult
         loadMapView()
         collectionView.delegate = self
         collectionView.dataSource = self
-//        photos = fetchAllPhotos()
         fetchedResultsController.delegate = self
+        
         
         do {
             try fetchedResultsController.performFetch()
         } catch {}
         
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reloadCollectionView", name: "doneGettingPhotos", object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
-//        if photos.count == 0 {
-//            generateNewCollection()
-//        }
+        
     }
     
     func loadMapView() {
@@ -60,15 +56,8 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, NSFetchedResult
     }
     
     func generateNewCollection() {
-        let photos = fetchedResultsController.fetchedObjects as! [Photo]
-        
-        
-        for p in photos {
-            sharedContext.deleteObject(p)
-        }
-        
-        print("photos from generate")
-        print(photos)
+        pin!.deletePhotos()
+
 //        guard let pinToDownload = self.pin else { return }
 //        PhotoDownloader().getPhotos(pinToDownload)
     }
@@ -92,10 +81,12 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, NSFetchedResult
 //    FETCHED RESULTS CONTROLLER DELEGATE METHODS
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
 //        don't need this one for collection view
+        print("i'm in will change thing")
     }
     
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
 //        no section data for this collection view
+        print("i'm in section thing")
     }
     
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
@@ -110,6 +101,7 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, NSFetchedResult
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        print("i'm in did change")
         self.collectionView.reloadData()
     }
     

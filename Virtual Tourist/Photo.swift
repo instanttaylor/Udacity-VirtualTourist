@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 class Photo: NSManagedObject {
     
@@ -37,6 +38,20 @@ class Photo: NSManagedObject {
         self.server = server
         self.thing = "Testing out data migration"
         
+    }
+    
+    var photoPath: String {
+        return "https://farm\(self.farm).staticflickr.com/\(self.server)/\(self.id)_\(self.secret).jpg"
+    }
+    
+    var photoImage: UIImage? {
+        get {
+            return Flickr.Caches.imageCache.imageWithIdentifier(photoPath)
+        }
+        
+        set {
+            Flickr.Caches.imageCache.storeImage(newValue, withIdentifier: photoPath)
+        }
     }
 }
 
